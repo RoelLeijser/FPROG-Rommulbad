@@ -1,4 +1,4 @@
-module Rommulbad.Store
+module Rommulbad.Data.Store
 
 open System
 open Rommulbad.Database
