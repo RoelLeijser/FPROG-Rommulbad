@@ -14,3 +14,10 @@ type CandidateStore(store: Store) =
                   GuardianId = gId
                   Diploma = dpl })
             |> List.ofSeq
+
+        member this.get(name: string) : Candidate option =
+            InMemoryDatabase.lookup name store.candidates
+            |> Option.map (fun (name, _, gId, dpl) ->
+                { Name = name
+                  GuardianId = gId
+                  Diploma = dpl })

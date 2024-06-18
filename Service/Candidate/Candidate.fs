@@ -17,23 +17,12 @@ let getCandidates (next: HttpFunc) (ctx: HttpContext) =
 let getCandidate (name: string) : HttpHandler =
     fun next ctx ->
         task {
-            // let store = ctx.GetService<Store>()
+            let dataAccess = ctx.GetService<ICandidateDataAccess>()
+            let candidate = dataAccess.get name
 
-            // let candidate = InMemoryDatabase.lookup name store.candidates
-
-
-            // match candidate with
-            // | None -> return! RequestErrors.NOT_FOUND "Employee not found!" next ctx
-            // | Some(name, _, gId, dpl) ->
-            //     return!
-            //         ThothSerializer.RespondJson
-            //             { Name = name
-            //               GuardianId = gId
-            //               Diploma = dpl }
-            //             Candidate.encode
-            //             next
-            //             ctx
-            return! text "OK" next ctx
+            match candidate with
+            | None -> return! RequestErrors.NOT_FOUND "Employee not found!" next ctx
+            | Some(candidate) -> return! ThothSerializer.RespondJson candidate Serialization.encode next ctx
         }
 
 
