@@ -1,17 +1,22 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
-
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
   </PropertyGroup>
-
   <ItemGroup>
-    <Compile Include="Web.fs" />
+    <Compile Include="Session/Serialization.fs" />
+    <Compile Include="Candidate/Serialization.fs" />
+    <Compile Include="Session/Session.fs" />
+    <Compile Include="Candidate/Candidate.fs" />
+    <Compile Include="HttpHandlers.fs" />
+    <Compile Include="NepFile.fs" />
   </ItemGroup>
-
   <ItemGroup>
     <PackageReference Include="Giraffe" Version="6.0.0" />
     <PackageReference Include="Thoth.Json.Giraffe" Version="6.0.0-beta-001" />
     <PackageReference Include="Thoth.Json.Net" Version="8.0.0" />
   </ItemGroup>
-
+  <ItemGroup>
+    <ProjectReference Include="..\Application\Application.fsproj" />
+    <ProjectReference Include="..\Model\Model.fsproj" />
+  </ItemGroup>
 </Project>

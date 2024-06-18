@@ -1,52 +1,10 @@
-module Rommulbad.Service.Web
+module Rommulbad.Service.Session.Session
 
-open System
 open Giraffe
-open Thoth.Json.Net
-open Thoth.Json.Giraffe
-
-let getCandidates: HttpHandler =
-    fun next ctx ->
-        task {
-            // let store = ctx.GetService<Store>()
-
-            // let candidates =
-            //     InMemoryDatabase.all store.candidates
-            //     |> Seq.map (fun (name, _, gId, dpl) ->
-            //         { Candidate.Name = name
-            //           GuardianId = gId
-            //           Diploma = dpl })
-
-            // return! ThothSerializer.RespondJsonSeq candidates Candidate.encode next ctx
-            return! text "OK" next ctx
-        }
-
-let getCandidate (name: string) : HttpHandler =
-    fun next ctx ->
-        task {
-            // let store = ctx.GetService<Store>()
-
-            // let candidate = InMemoryDatabase.lookup name store.candidates
-
-
-            // match candidate with
-            // | None -> return! RequestErrors.NOT_FOUND "Employee not found!" next ctx
-            // | Some(name, _, gId, dpl) ->
-            //     return!
-            //         ThothSerializer.RespondJson
-            //             { Name = name
-            //               GuardianId = gId
-            //               Diploma = dpl }
-            //             Candidate.encode
-            //             next
-            //             ctx
-            return! text "OK" next ctx
-        }
 
 let addSession (name: string) : HttpHandler =
     fun next ctx ->
         task {
-
             // let! session = ThothSerializer.ReadBody ctx Session.decode
 
             // match session with
@@ -60,15 +18,14 @@ let addSession (name: string) : HttpHandler =
             //     |> ignore
 
 
-            //     return! text "OK" next ctx
             return! text "OK" next ctx
         }
 
-let encodeSession (_, deep, date, minutes) =
-    Encode.object
-        [ "date", Encode.datetime date
-          "deep", Encode.bool deep
-          "minutes", Encode.int minutes ]
+// let encodeSession (_, deep, date, minutes) =
+//     Encode.object
+//         [ "date", Encode.datetime date
+//           "deep", Encode.bool deep
+//           "minutes", Encode.int minutes ]
 
 
 let getSessions (name: string) : HttpHandler =
@@ -100,7 +57,6 @@ let getTotalMinutes (name: string) : HttpHandler =
 let getEligibleSessions (name: string, diploma: string) : HttpHandler =
     fun next ctx ->
         task {
-
             // let store = ctx.GetService<Store>()
 
             // let shallowOk =
@@ -120,7 +76,6 @@ let getEligibleSessions (name: string, diploma: string) : HttpHandler =
             // let sessions = InMemoryDatabase.filter filter store.sessions
 
             // return! ThothSerializer.RespondJsonSeq sessions encodeSession next ctx
-
             return! text "OK" next ctx
         }
 
@@ -149,17 +104,12 @@ let getTotalEligibleMinutes (name: string, diploma: string) : HttpHandler =
             //     |> Seq.sum
 
             // return! ThothSerializer.RespondJson total Encode.int next ctx
-
             return! text "OK" next ctx
         }
 
-
-
-let routes: HttpHandler =
+let handlers: HttpHandler =
     choose
-        [ GET >=> route "/candidate" >=> getCandidates
-          GET >=> routef "/candidate/%s" getCandidate
-          POST >=> routef "/candidate/%s/session" addSession
+        [ POST >=> routef "/candidate/%s/session" addSession
           GET >=> routef "/candidate/%s/session" getSessions
           GET >=> routef "/candidate/%s/session/total" getTotalMinutes
           GET >=> routef "/candidate/%s/session/%s" getEligibleSessions

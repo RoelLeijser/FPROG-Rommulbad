@@ -19,6 +19,7 @@ open Rommulbad.Database
 /// guardians
 /// - id (3 digits followed by dash and 4 letters, e.g. 133-LEET)
 /// - name (consists of words separated by spaces)
+
 type Store() =
     member val candidates: InMemoryDatabase<string, string * DateTime * string * string> =
         [ "Eleanor", DateTime(2016, 1, 9), "123-ABCD", "A"
