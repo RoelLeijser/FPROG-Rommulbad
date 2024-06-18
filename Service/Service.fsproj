@@ -4,8 +4,8 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Session/Serialization.fs" />
-    <Compile Include="Candidate/Serialization.fs" />
     <Compile Include="Session/Session.fs" />
+    <Compile Include="Candidate/Serialization.fs" />
     <Compile Include="Candidate/Candidate.fs" />
     <Compile Include="HttpHandlers.fs" />
     <Compile Include="NepFile.fs" />

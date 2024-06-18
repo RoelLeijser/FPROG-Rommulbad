@@ -5,7 +5,6 @@ open Rommulbad.Model.Session
 
 let encode: Encoder<Session> =
     fun session ->
-
         Encode.object
             [ "deep", Encode.bool session.Deep
               "date", Encode.datetime session.Date

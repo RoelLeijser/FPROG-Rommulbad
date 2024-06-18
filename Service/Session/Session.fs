@@ -1,6 +1,9 @@
 module Rommulbad.Service.Session.Session
 
 open Giraffe
+open Thoth.Json.Giraffe
+open Microsoft.AspNetCore.Http
+open Rommulbad.Application.Session
 
 let addSession (name: string) : HttpHandler =
     fun next ctx ->
@@ -21,22 +24,15 @@ let addSession (name: string) : HttpHandler =
             return! text "OK" next ctx
         }
 
-// let encodeSession (_, deep, date, minutes) =
-//     Encode.object
-//         [ "date", Encode.datetime date
-//           "deep", Encode.bool deep
-//           "minutes", Encode.int minutes ]
-
-
 let getSessions (name: string) : HttpHandler =
     fun next ctx ->
         task {
-            // let store = ctx.GetService<Store>()
+            let dataAccess = ctx.GetService<ISessionDataAccess>()
+            let sessions = dataAccess.get name
 
-            // let sessions = InMemoryDatabase.filter (fun (n, _, _, _) -> n = name) store.sessions
-
-            // return! ThothSerializer.RespondJsonSeq sessions encodeSession next ctx
-            return! text "OK" next ctx
+            match sessions with
+            | Some session -> return! ThothSerializer.RespondJson session Serialization.encode next ctx
+            | None -> return! RequestErrors.NOT_FOUND "Candidate not found" next ctx
         }
 
 let getTotalMinutes (name: string) : HttpHandler =

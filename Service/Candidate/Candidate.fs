@@ -1,7 +1,6 @@
 module Rommulbad.Service.Candidate.Candidate
 
 open Giraffe
-open Thoth.Json.Net
 open Thoth.Json.Giraffe
 open Rommulbad.Application.Candidate
 open Microsoft.AspNetCore.Http

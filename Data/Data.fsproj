@@ -6,6 +6,7 @@
     <Compile Include="Database.fs" />
     <Compile Include="Store.fs" />
     <Compile Include="CandidateStore.fs" />
+    <Compile Include="SessionStore.fs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Application\Application.fsproj" />
