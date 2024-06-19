@@ -20,7 +20,7 @@ let getCandidate (name: string) : HttpHandler =
             let candidate = dataAccess.get name
 
             match candidate with
-            | None -> return! RequestErrors.NOT_FOUND "Employee not found!" next ctx
+            | None -> return! RequestErrors.NOT_FOUND "Candidate not found!" next ctx
             | Some(candidate) -> return! ThothSerializer.RespondJson candidate Serialization.encode next ctx
         }
 

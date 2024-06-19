@@ -34,3 +34,26 @@ type SessionStore(store: Store) =
             InMemoryDatabase.filter (fun (n, _, _, _) -> n = name) store.sessions
             |> Seq.map (fun (_, _, _, a) -> a)
             |> Seq.sum
+
+
+        // list of all sessions from a candidate that are eligible for a diploma
+        member this.eligibleSessions(name: string, diploma: string) : List<Session> =
+
+            // TODO: custom type for diploma
+            let shallowOk =
+                match diploma with
+                | "A" -> true
+                | _ -> false
+
+            let minMinutes =
+                match diploma with
+                | "A" -> 1
+                | "B" -> 10
+                | _ -> 15
+
+            InMemoryDatabase.filter (fun (n, d, _, a) -> (d || shallowOk) && (a >= minMinutes)) store.sessions
+            |> Seq.map (fun (_, deep, date, minutes) ->
+                { Deep = deep
+                  Date = date
+                  Minutes = minutes })
+            |> List.ofSeq
