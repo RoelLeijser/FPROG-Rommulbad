@@ -51,7 +51,9 @@ type SessionStore(store: Store) =
                 | "B" -> 10
                 | _ -> 15
 
-            InMemoryDatabase.filter (fun (n, d, _, a) -> (d || shallowOk) && (a >= minMinutes)) store.sessions
+            InMemoryDatabase.filter
+                (fun (n, d, _, a) -> (d || shallowOk) && (a >= minMinutes) && n = name)
+                store.sessions
             |> Seq.map (fun (_, deep, date, minutes) ->
                 { Deep = deep
                   Date = date
@@ -71,7 +73,8 @@ type SessionStore(store: Store) =
                 | "B" -> 10
                 | _ -> 15
 
-            let filter (n, d, _, a) = (d || shallowOk) && (a >= minMinutes)
+            let filter (n, d, _, a) =
+                (d || shallowOk) && (a >= minMinutes) && (n = name)
 
             InMemoryDatabase.filter filter store.sessions
             |> Seq.map (fun (_, _, _, a) -> a)
