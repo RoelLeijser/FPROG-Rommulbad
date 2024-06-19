@@ -28,3 +28,9 @@ type SessionStore(store: Store) =
             match result with
             | Ok _ -> Ok()
             | Error(UniquenessError message) -> failwith message
+
+        // total minutes of all sessions from a candidate
+        member this.total(name: string) : int =
+            InMemoryDatabase.filter (fun (n, _, _, _) -> n = name) store.sessions
+            |> Seq.map (fun (_, _, _, a) -> a)
+            |> Seq.sum

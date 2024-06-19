@@ -4,6 +4,7 @@ open Giraffe
 open Thoth.Json.Giraffe
 open Microsoft.AspNetCore.Http
 open Rommulbad.Application.Session
+open Thoth.Json.Net
 
 let addSession (name: string) : HttpHandler =
     fun next ctx ->
@@ -33,15 +34,10 @@ let getSessions (name: string) : HttpHandler =
 let getTotalMinutes (name: string) : HttpHandler =
     fun next ctx ->
         task {
-            // let store = ctx.GetService<Store>()
+            let dataAccess = ctx.GetService<ISessionDataAccess>()
+            let total = dataAccess.total name
 
-            // let total =
-            //     InMemoryDatabase.filter (fun (n, _, _, _) -> n = name) store.sessions
-            //     |> Seq.map (fun (_, _, _, a) -> a)
-            //     |> Seq.sum
-
-            // return! ThothSerializer.RespondJson total Encode.int next ctx
-            return! text "OK" next ctx
+            return! ThothSerializer.RespondJson total Encode.int next ctx
         }
 
 
