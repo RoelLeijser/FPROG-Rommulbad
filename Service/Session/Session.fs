@@ -8,20 +8,17 @@ open Rommulbad.Application.Session
 let addSession (name: string) : HttpHandler =
     fun next ctx ->
         task {
-            // let! session = ThothSerializer.ReadBody ctx Session.decode
+            let dataAccess = ctx.GetService<ISessionDataAccess>()
+            let! session = ThothSerializer.ReadBody ctx Serialization.decode
 
-            // match session with
-            // | Error errorMessage -> return! RequestErrors.BAD_REQUEST errorMessage next ctx
-            // | Ok { Deep = deep
-            //        Date = date
-            //        Minutes = minutes } ->
-            //     let store = ctx.GetService<Store>()
+            match session with
+            | Error errorMessage -> return! RequestErrors.BAD_REQUEST errorMessage next ctx
+            | Ok session ->
+                let result = dataAccess.add name session
 
-            //     InMemoryDatabase.insert (name, date) (name, deep, date, minutes) store.sessions
-            //     |> ignore
-
-
-            return! text "OK" next ctx
+                match result with
+                | Ok _ -> return! text "OK" next ctx
+                | Error message -> return! RequestErrors.BAD_REQUEST message next ctx
         }
 
 let getSessions (name: string) : HttpHandler =
@@ -30,9 +27,7 @@ let getSessions (name: string) : HttpHandler =
             let dataAccess = ctx.GetService<ISessionDataAccess>()
             let sessions = dataAccess.get name
 
-            match sessions with
-            | Some session -> return! ThothSerializer.RespondJson session Serialization.encode next ctx
-            | None -> return! RequestErrors.NOT_FOUND "Candidate not found" next ctx
+            return! ThothSerializer.RespondJsonSeq sessions Serialization.encode next ctx
         }
 
 let getTotalMinutes (name: string) : HttpHandler =
