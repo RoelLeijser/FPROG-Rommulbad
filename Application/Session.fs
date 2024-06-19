@@ -7,3 +7,4 @@ type ISessionDataAccess =
     abstract member add: string -> Session -> Result<unit, string>
     abstract member total: string -> int
     abstract member eligibleSessions: string * string -> List<Session>
+    abstract member eligibleSessionsTotal: string * string -> int

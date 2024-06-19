@@ -53,29 +53,10 @@ let getEligibleSessions (name: string, diploma: string) : HttpHandler =
 let getTotalEligibleMinutes (name: string, diploma: string) : HttpHandler =
     fun next ctx ->
         task {
-            // let store = ctx.GetService<Store>()
+            let dataAccess = ctx.GetService<ISessionDataAccess>()
+            let total = dataAccess.eligibleSessionsTotal (name, diploma)
 
-            // let shallowOk =
-            //     match diploma with
-            //     | "A" -> true
-            //     | _ -> false
-
-            // let minMinutes =
-            //     match diploma with
-            //     | "A" -> 1
-            //     | "B" -> 10
-            //     | _ -> 15
-
-            // let filter (n, d, _, a) = (d || shallowOk) && (a >= minMinutes)
-
-
-            // let total =
-            //     InMemoryDatabase.filter filter store.sessions
-            //     |> Seq.map (fun (_, _, _, a) -> a)
-            //     |> Seq.sum
-
-            // return! ThothSerializer.RespondJson total Encode.int next ctx
-            return! text "OK" next ctx
+            return! ThothSerializer.RespondJson total Encode.int next ctx
         }
 
 let handlers: HttpHandler =

@@ -57,3 +57,22 @@ type SessionStore(store: Store) =
                   Date = date
                   Minutes = minutes })
             |> List.ofSeq
+
+        // total minutes of all sessions from a candidate that are eligible for a diploma
+        member this.eligibleSessionsTotal(name: string, diploma: string) : int =
+            let shallowOk =
+                match diploma with
+                | "A" -> true
+                | _ -> false
+
+            let minMinutes =
+                match diploma with
+                | "A" -> 1
+                | "B" -> 10
+                | _ -> 15
+
+            let filter (n, d, _, a) = (d || shallowOk) && (a >= minMinutes)
+
+            InMemoryDatabase.filter filter store.sessions
+            |> Seq.map (fun (_, _, _, a) -> a)
+            |> Seq.sum
