@@ -21,3 +21,11 @@ type CandidateStore(store: Store) =
                 { Name = name
                   GuardianId = gId
                   Diploma = dpl })
+
+        member this.add(candidate: Candidate) =
+            let insertResult = InMemoryDatabase.insert candidate.Name (candidate.Name, System.DateTime.Now, candidate.GuardianId, candidate.Diploma) store.candidates
+            match insertResult with
+            | Ok _ -> Ok()
+            | Error err -> Error (err.ToString())
+            
+           
