@@ -10,7 +10,10 @@ open Rommulbad.Service.HttpHandler
 open Rommulbad.Application.Candidate
 open Rommulbad.Data.CandidateStore
 open Rommulbad.Data.SessionStore
+open Rommulbad.Data.GuardianStore
 open Rommulbad.Application.Session
+open Rommulbad.Application.Guardian
+
 
 let configureApp (app: IApplicationBuilder) =
     // Add Giraffe to the ASP.NET Core pipeline
@@ -23,6 +26,7 @@ let configureServices (services: IServiceCollection) =
         .AddSingleton<Store>(Store())
         .AddSingleton<ICandidateDataAccess, CandidateStore>()
         .AddSingleton<ISessionDataAccess, SessionStore>()
+        .AddSingleton<IGuardianDataAccess, GuardianStore>()
         .AddSingleton<Json.ISerializer>(ThothSerializer(skipNullField = false, caseStrategy = CaseStrategy.CamelCase))
     |> ignore
 

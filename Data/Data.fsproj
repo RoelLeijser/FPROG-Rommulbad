@@ -5,6 +5,7 @@
   <ItemGroup>
     <Compile Include="Database.fs" />
     <Compile Include="Store.fs" />
+    <Compile Include="GuardianStore.fs" />
     <Compile Include="CandidateStore.fs" />
     <Compile Include="SessionStore.fs" />
   </ItemGroup>

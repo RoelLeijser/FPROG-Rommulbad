@@ -7,6 +7,8 @@
     <Compile Include="Session/Session.fs" />
     <Compile Include="Candidate/Serialization.fs" />
     <Compile Include="Candidate/Candidate.fs" />
+    <Compile Include="Guardian/Serialization.fs" />
+    <Compile Include="Guardian/Guardian.fs" />
     <Compile Include="HttpHandlers.fs" />
     <Compile Include="EmptyFile.fs" />
   </ItemGroup>
