@@ -35,6 +35,8 @@ type GuardianStore(store: Store) =
                   Candidates = getAllCandidatesByGuardianId id store })
             
 
-        member this.add(arg1: Guardian): Result<unit,string> = 
-            failwith "Not Implemented"
-
+        member this.add(guardian: Guardian): Result<unit,string> = 
+            let insertResult = InMemoryDatabase.insert guardian.Id (guardian.Id, guardian.Name) store.guardians
+            match insertResult with
+            | Ok _ -> Ok()
+            | Error err -> Error (err.ToString())

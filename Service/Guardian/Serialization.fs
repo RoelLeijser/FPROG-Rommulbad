@@ -16,4 +16,4 @@ let decode: Decoder<Guardian> =
     Decode.object (fun get ->
         { Id = get.Required.Field "id" Decode.string
           Name = get.Required.Field "name" Decode.string
-          Candidates = get.Required.Field "candidates" (Decode.list Rommulbad.Service.Candidate.Serialization.decode) })
+          Candidates = get.Optional.Field "candidates" (Decode.list Rommulbad.Service.Candidate.Serialization.decode) |> Option.defaultValue [] }) 
