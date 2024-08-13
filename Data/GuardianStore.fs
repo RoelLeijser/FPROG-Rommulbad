@@ -26,9 +26,15 @@ type GuardianStore(store: Store) =
                   Candidates = getAllCandidatesByGuardianId id store })
             |> List.ofSeq
             
+            
+        member this.get(id: string): Guardian option = 
+            InMemoryDatabase.lookup id store.guardians
+            |> Option.map (fun (id, name) -> 
+                { Id = id
+                  Name = name
+                  Candidates = getAllCandidatesByGuardianId id store })
+            
 
         member this.add(arg1: Guardian): Result<unit,string> = 
-            failwith "Not Implemented"
-        member this.get(arg1: string): Guardian option = 
             failwith "Not Implemented"
 
