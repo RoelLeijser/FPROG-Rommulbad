@@ -6,6 +6,7 @@ open Microsoft.AspNetCore.Http
 open Rommulbad.Application.Session
 open Thoth.Json.Net
 open Rommulbad.Model.Session
+open Rommulbad.Model.Diploma
 
 let addSession (name: string) : HttpHandler =
     fun next ctx ->
@@ -49,21 +50,11 @@ let getEligibleSessions (name: string, diploma: string) : HttpHandler =
             let dataAccess = ctx.GetService<ISessionDataAccess>()
             let sessions = dataAccess.get name
 
-            let shallowOk =
-                match diploma with
-                | "A" -> true
-                | _ -> false
-
-            let minMinutes =
-                match diploma with
-                | "A" -> 1
-                | "B" -> 10
-                | _ -> 15
-
-            let eligibleSessions = sessions 
-                                    |> Seq.filter (fun (session: Session)
-                                                    -> session.Minutes >= minMinutes
-                                                    && session.Deep = shallowOk)
+            let eligibleSessions =
+                sessions
+                |> Seq.filter (fun (session: Session) ->
+                    session.Minutes >= Diploma.minMinutes (Diploma.make diploma)
+                    && session.Deep = Diploma.shallowOk (Diploma.make diploma))
 
             return! ThothSerializer.RespondJsonSeq eligibleSessions Serialization.encode next ctx
         }
@@ -74,24 +65,14 @@ let getTotalEligibleMinutes (name: string, diploma: string) : HttpHandler =
             let dataAccess = ctx.GetService<ISessionDataAccess>()
             let sessions = dataAccess.get name
 
-            let shallowOk =
-                match diploma with
-                | "A" -> true
-                | _ -> false
-
-            let minMinutes =
-                match diploma with
-                | "A" -> 1
-                | "B" -> 10
-                | _ -> 15
-
-            let eligibleSessions = sessions 
-                                    |> Seq.filter (fun (session: Session)
-                                                    -> session.Minutes >= minMinutes
-                                                    && session.Deep = shallowOk)
+            let eligibleSessions =
+                sessions
+                |> Seq.filter (fun (session: Session) ->
+                    session.Minutes >= Diploma.minMinutes (Diploma.make diploma)
+                    && session.Deep = Diploma.shallowOk (Diploma.make diploma))
 
             let total = Seq.sumBy (fun (session: Session) -> session.Minutes) eligibleSessions
-            
+
             return! ThothSerializer.RespondJson total Encode.int next ctx
         }
 

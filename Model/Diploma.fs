@@ -25,6 +25,18 @@ module Diploma =
         | "C" -> C
         | _ -> NoDiploma
 
+    let shallowOk (diploma: Diploma) =
+        match diploma with
+        | A -> true
+        | _ -> false
+
+    let minMinutes (diploma: Diploma) =
+        match diploma with
+        | A -> 1
+        | B -> 10
+        | C -> 15
+        | NoDiploma -> 0
+
     let encode: Encoder<Diploma> = (fun (Diploma diploma) -> Encode.string diploma)
 
     let decode: Decoder<Diploma> =
