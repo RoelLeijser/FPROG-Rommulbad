@@ -1,5 +1,7 @@
 module Rommulbad.Model.Candidate
 
+open Diploma
+
 // Names are words separated by spaces
 // GuardianId must be a valid guardian id (see below)
 // Diploma is the highest diploma obtained by the candidate. It can be
@@ -8,4 +10,4 @@ module Rommulbad.Model.Candidate
 type Candidate =
     { Name: string
       GuardianId: string
-      Diploma: string }
+      Diploma: Diploma }

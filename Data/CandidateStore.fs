@@ -4,6 +4,7 @@ open Rommulbad.Data.Store
 open Rommulbad.Database
 open Rommulbad.Model.Candidate
 open Rommulbad.Application.Candidate
+open Rommulbad.Model.Diploma
 
 type CandidateStore(store: Store) =
     interface ICandidateDataAccess with
@@ -12,7 +13,7 @@ type CandidateStore(store: Store) =
             |> Seq.map (fun (name, _, gId, dpl) ->
                 { Name = name
                   GuardianId = gId
-                  Diploma = dpl })
+                  Diploma = Diploma.make dpl })
             |> List.ofSeq
 
         member this.get(name: string) : Candidate option =
@@ -20,12 +21,17 @@ type CandidateStore(store: Store) =
             |> Option.map (fun (name, _, gId, dpl) ->
                 { Name = name
                   GuardianId = gId
-                  Diploma = dpl })
+                  Diploma = Diploma.make dpl })
 
         member this.add(candidate: Candidate) =
-            let insertResult = InMemoryDatabase.insert candidate.Name (candidate.Name, System.DateTime.Now, candidate.GuardianId, candidate.Diploma) store.candidates
-            match insertResult with
-            | Ok _ -> Ok()
-            | Error err -> Error (err.ToString())
-            
-           
+            match candidate.Diploma with
+            | Diploma diploma ->
+                let insertResult =
+                    InMemoryDatabase.insert
+                        candidate.Name
+                        (candidate.Name, System.DateTime.Now, candidate.GuardianId, diploma)
+                        store.candidates
+
+                match insertResult with
+                | Ok _ -> Ok()
+                | Error err -> Error(err.ToString())
