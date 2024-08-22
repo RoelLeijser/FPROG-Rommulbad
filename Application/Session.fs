@@ -16,3 +16,10 @@ let eligibleSessions (sessions: List<Session>) (diploma: string) =
             
 let totalMinutes (sessions: List<Session>) =
     Seq.sumBy (fun (session: Session) -> session.Minutes) sessions
+
+let isEligible (sessions: List<Session>) (diploma: string) =
+    let eligibleSessions = eligibleSessions sessions diploma
+    let total = totalMinutes eligibleSessions
+    let diploma = Diploma.make diploma
+
+    total >= Diploma.totalMinutes diploma
