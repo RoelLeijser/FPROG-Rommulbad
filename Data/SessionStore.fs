@@ -5,7 +5,6 @@ open Rommulbad.Database
 open Rommulbad.Model.Session
 open Rommulbad.Application.Session
 
-
 type SessionStore(store: Store) =
     interface ISessionDataAccess with
         // list of all sessions from a candidate

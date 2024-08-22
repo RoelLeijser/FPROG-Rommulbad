@@ -37,6 +37,13 @@ module Diploma =
         | C -> 15
         | NoDiploma -> 0
 
+    let totalMinutes (diploma: Diploma) =
+        match diploma with
+        | A -> 120
+        | B -> 150
+        | C -> 180
+        | NoDiploma -> 0
+
     let encode: Encoder<Diploma> = (fun (Diploma diploma) -> Encode.string diploma)
 
     let decode: Decoder<Diploma> =

@@ -35,3 +35,12 @@ type CandidateStore(store: Store) =
                 match insertResult with
                 | Ok _ -> Ok()
                 | Error err -> Error(err.ToString())
+
+        member this.update (candidate: Candidate) = 
+            match candidate.Diploma with
+            | Diploma diploma ->
+                InMemoryDatabase.update
+                    candidate.Name
+                    (candidate.Name, System.DateTime.Now, candidate.GuardianId, diploma)
+                    store.candidates
+
