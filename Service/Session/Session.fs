@@ -4,6 +4,10 @@ open Giraffe
 open Thoth.Json.Giraffe
 open Rommulbad.Application.Session
 open Thoth.Json.Net
+open Rommulbad.Model.Common
+open Rommulbad.Model.Session
+
+let encodeSessionMinutes: Encoder<int> = fun minutes -> Encode.int minutes
 
 let addSession (name: string) : HttpHandler =
     fun next ctx ->
@@ -36,7 +40,7 @@ let getTotalMinutes (name: string) : HttpHandler =
             let dataAccess = ctx.GetService<ISessionDataAccess>()
             let sessions = dataAccess.get name
             
-            return! ThothSerializer.RespondJson (totalMinutes sessions) Encode.int next ctx
+            return! ThothSerializer.RespondJson (totalMinutes sessions) encodeSessionMinutes next ctx
         }
 
 
@@ -55,7 +59,7 @@ let getTotalEligibleMinutes (name: string, diploma: string) : HttpHandler =
             let dataAccess = ctx.GetService<ISessionDataAccess>()
             let sessions = dataAccess.get name
 
-            return! ThothSerializer.RespondJson (totalMinutes (eligibleSessions sessions diploma)) Encode.int next ctx
+            return! ThothSerializer.RespondJson (totalMinutes (eligibleSessions sessions diploma)) encodeSessionMinutes next ctx
         }
 
 let handlers: HttpHandler =

@@ -8,7 +8,7 @@ open Rommulbad.Model.Guardian
 let getGuardians (next: HttpFunc) (ctx: HttpContext) =
     task {
         let dataAccess = ctx.GetService<IGuardianDataAccess>()
-        let guardians = dataAccess.all ()
+        let guardians = getAll dataAccess
 
         return! ThothSerializer.RespondJsonSeq guardians Serialization.encode next ctx
     }
@@ -17,7 +17,7 @@ let getGuardian (id: string) : HttpHandler =
     fun next ctx ->
         task {
             let dataAccess = ctx.GetService<IGuardianDataAccess>()
-            let guardian = dataAccess.get id
+            let guardian = get dataAccess id
 
             match guardian with
             | None -> return! RequestErrors.NOT_FOUND "Guardian not found!" next ctx
@@ -33,7 +33,7 @@ let addGuardian : HttpHandler =
             | Error msg -> return! RequestErrors.BAD_REQUEST msg next ctx
             | Ok guardian ->
                 let dataAccess = ctx.GetService<IGuardianDataAccess>()
-                let result = dataAccess.add guardian
+                let result = add dataAccess guardian
 
                 match result with
                 | Error msg -> return! RequestErrors.BAD_REQUEST msg next ctx

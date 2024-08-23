@@ -3,6 +3,8 @@
     <TargetFramework>net8.0</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Validation.fs" />
+    <Compile Include="Common.fs" />
     <Compile Include="Diploma.fs" />
     <Compile Include="Session.fs" />
     <Compile Include="Candidate.fs" />

@@ -1,6 +1,7 @@
 module Rommulbad.Model.Candidate
 
 open Diploma
+open Common
 
 // Names are words separated by spaces
 // GuardianId must be a valid guardian id (see below)
@@ -9,5 +10,5 @@ open Diploma
 // - or the strings "A", "B", or "C".
 type Candidate =
     { Name: string
-      GuardianId: string
+      GuardianId: GuardianId
       Diploma: Diploma }

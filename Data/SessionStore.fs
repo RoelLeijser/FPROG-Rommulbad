@@ -4,6 +4,9 @@ open Rommulbad.Data.Store
 open Rommulbad.Database
 open Rommulbad.Model.Session
 open Rommulbad.Application.Session
+open Rommulbad.Model.Common
+
+let sessionMinutesToInt (SessionMinutes minutes) = minutes
 
 type SessionStore(store: Store) =
     interface ISessionDataAccess with
@@ -13,7 +16,7 @@ type SessionStore(store: Store) =
             |> Seq.map (fun (_, deep, date, minutes) ->
                 { Deep = deep
                   Date = date
-                  Minutes = minutes })
+                  Minutes = SessionMinutes minutes })
             |> List.ofSeq
 
         // add a session to a candidate
@@ -21,7 +24,7 @@ type SessionStore(store: Store) =
             let result =
                 InMemoryDatabase.insert
                     (name, session.Date)
-                    (name, session.Deep, session.Date, session.Minutes)
+                    (name, session.Deep, session.Date, sessionMinutesToInt session.Minutes)
                     store.sessions
 
             match result with

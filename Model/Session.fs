@@ -1,6 +1,7 @@
 module Rommulbad.Model.Session
 
 open System
+open Common
 
 /// Swimming session registered on a specific date
 ///
@@ -10,4 +11,8 @@ open System
 type Session =
     { Deep: bool
       Date: DateTime
-      Minutes: int }
+      Minutes: SessionMinutes }
+
+
+
+  

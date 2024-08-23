@@ -6,13 +6,16 @@ open Rommulbad.Model.Guardian
 open Rommulbad.Application.Guardian
 open Rommulbad.Model.Candidate
 open Rommulbad.Model.Diploma
+open Rommulbad.Model.Common
+
+let guardianIdtoString (id: GuardianId) = id |> fun (GuardianId id) -> id
 
 let getAllCandidatesByGuardianId (guardianId: string) (store: Store) =
     InMemoryDatabase.all store.candidates
     |> Seq.filter (fun (_, _, gId, _) -> gId = guardianId)
     |> Seq.map (fun (name, _, _, dpl) ->
         { Name = name
-          GuardianId = guardianId
+          GuardianId = GuardianId guardianId
           Diploma = Diploma.make dpl })
     |> List.ofSeq
 
@@ -22,7 +25,7 @@ type GuardianStore(store: Store) =
         member this.all() =
             InMemoryDatabase.all store.guardians
             |> Seq.map (fun (id, name) ->
-                { Id = id
+                { Id = GuardianId id
                   Name = name
                   Candidates = getAllCandidatesByGuardianId id store })
             |> List.ofSeq
@@ -31,14 +34,17 @@ type GuardianStore(store: Store) =
         member this.get(id: string) : Guardian option =
             InMemoryDatabase.lookup id store.guardians
             |> Option.map (fun (id, name) ->
-                { Id = id
+                { Id = GuardianId id
                   Name = name
                   Candidates = getAllCandidatesByGuardianId id store })
 
 
-        member this.add(guardian: Guardian) : Result<unit, string> =
+        member this.add(guardian: Guardian) =
             let insertResult =
-                InMemoryDatabase.insert guardian.Id (guardian.Id, guardian.Name) store.guardians
+                  InMemoryDatabase.insert
+                    (guardianIdtoString guardian.Id)
+                    ((guardianIdtoString guardian.Id), guardian.Name)
+                    store.guardians
 
             match insertResult with
             | Ok _ -> Ok()
