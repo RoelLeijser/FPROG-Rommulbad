@@ -63,8 +63,10 @@ let awardDiploma (name: string, diploma: string) : HttpHandler =
                 | true ->
                     let diploma = Diploma.make diploma
                     let updatedCandidate = { candidate with Diploma = diploma }
-                    candidateDataAccess.update updatedCandidate
-                    return! ThothSerializer.RespondJson updatedCandidate Serialization.encode next ctx
+                    let result = candidateDataAccess.update updatedCandidate
+                    match result with
+                    | Error msg -> return! RequestErrors.BAD_REQUEST msg next ctx
+                    | Ok () -> return! ThothSerializer.RespondJson updatedCandidate Serialization.encode next ctx
 
                 | false -> return! RequestErrors.BAD_REQUEST "Not enough minutes for diploma" next ctx
         }
