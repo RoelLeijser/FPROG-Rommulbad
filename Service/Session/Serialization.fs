@@ -4,7 +4,8 @@ open Thoth.Json.Net
 open Rommulbad.Model.Session
 open Rommulbad.Model.Common
 
-let encodeSessionMinutes = fun (SessionMinutes minutes) -> Encode.int minutes
+let encodeSessionMinutes: Encoder<int> = fun minutes -> Encode.int minutes
+let SessionMinutesToInt (SessionMinutes minutes) = minutes
 
 let decodeSessionMinutes =
     Decode.int
@@ -18,7 +19,7 @@ let encode: Encoder<Session> =
         Encode.object
             [ "deep", Encode.bool session.Deep
               "date", Encode.datetime session.Date
-              "amount", encodeSessionMinutes session.Minutes ]
+              "amount", Encode.int (SessionMinutesToInt session.Minutes) ]
 
 let decode: Decoder<Session> =
     Decode.object (fun get ->

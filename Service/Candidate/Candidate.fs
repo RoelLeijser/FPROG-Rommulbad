@@ -2,8 +2,9 @@ module Rommulbad.Service.Candidate.Candidate
 
 open Giraffe
 open Thoth.Json.Giraffe
-open Rommulbad.Application.Candidate
 open Rommulbad.Application.Session
+
+open Rommulbad.Application.Candidate
 open Microsoft.AspNetCore.Http
 open Rommulbad.Model.Candidate
 open Rommulbad.Model.Diploma
@@ -11,7 +12,7 @@ open Rommulbad.Model.Diploma
 let getCandidates (next: HttpFunc) (ctx: HttpContext) =
     task {
         let dataAccess = ctx.GetService<ICandidateDataAccess>()
-        let candidates = dataAccess.all ()
+        let candidates = all dataAccess 
 
         return! ThothSerializer.RespondJsonSeq candidates Serialization.encode next ctx
     }
@@ -20,7 +21,7 @@ let getCandidate (name: string) : HttpHandler =
     fun next ctx ->
         task {
             let dataAccess = ctx.GetService<ICandidateDataAccess>()
-            let candidate = dataAccess.get name
+            let candidate = get dataAccess name
 
             match candidate with
             | None -> return! RequestErrors.NOT_FOUND "Candidate not found!" next ctx
@@ -36,7 +37,7 @@ let addCandidate : HttpHandler =
             | Error msg -> return! RequestErrors.BAD_REQUEST msg next ctx
             | Ok candidate ->
                 let dataAccess = ctx.GetService<ICandidateDataAccess>()
-                let result = dataAccess.add candidate
+                let result = add dataAccess candidate
 
                 match result with
                 | Error msg -> return! RequestErrors.BAD_REQUEST msg next ctx
@@ -49,12 +50,12 @@ let awardDiploma (name: string, diploma: string) : HttpHandler =
         task {
             let candidateDataAccess = ctx.GetService<ICandidateDataAccess>()
             let sessionDataAccess = ctx.GetService<ISessionDataAccess>()
-            let candidate = candidateDataAccess.get name
+            let candidate = get candidateDataAccess name
             
             match candidate with
             | None -> return! RequestErrors.NOT_FOUND "Candidate not found!" next ctx
             | Some(candidate) ->
-                let sessions = sessionDataAccess.get candidate.Name
+                let sessions = Rommulbad.Application.Session.get sessionDataAccess candidate.Name
 
                 let isEligible = isEligible sessions diploma
 
@@ -62,7 +63,7 @@ let awardDiploma (name: string, diploma: string) : HttpHandler =
                 | true ->
                     let diploma = Diploma.make diploma
                     let updatedCandidate = { candidate with Diploma = diploma }
-                    let result = candidateDataAccess.update updatedCandidate
+                    candidateDataAccess.update updatedCandidate
                     return! ThothSerializer.RespondJson updatedCandidate Serialization.encode next ctx
 
                 | false -> return! RequestErrors.BAD_REQUEST "Not enough minutes for diploma" next ctx

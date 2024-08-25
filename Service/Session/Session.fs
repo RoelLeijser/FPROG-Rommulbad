@@ -18,7 +18,7 @@ let addSession (name: string) : HttpHandler =
             match session with
             | Error errorMessage -> return! RequestErrors.BAD_REQUEST errorMessage next ctx
             | Ok session ->
-                let result = dataAccess.add name session
+                let result = add dataAccess name session
 
                 match result with
                 | Ok _ -> return! text "OK" next ctx
@@ -29,7 +29,7 @@ let getSessions (name: string) : HttpHandler =
     fun next ctx ->
         task {
             let dataAccess = ctx.GetService<ISessionDataAccess>()
-            let sessions = dataAccess.get name
+            let sessions = get dataAccess name
 
             return! ThothSerializer.RespondJsonSeq sessions Serialization.encode next ctx
         }
@@ -38,7 +38,7 @@ let getTotalMinutes (name: string) : HttpHandler =
     fun next ctx ->
         task {
             let dataAccess = ctx.GetService<ISessionDataAccess>()
-            let sessions = dataAccess.get name
+            let sessions = get dataAccess name
             
             return! ThothSerializer.RespondJson (totalMinutes sessions) encodeSessionMinutes next ctx
         }
@@ -48,7 +48,7 @@ let getEligibleSessions (name: string, diploma: string) : HttpHandler =
     fun next ctx ->
         task {
             let dataAccess = ctx.GetService<ISessionDataAccess>()
-            let sessions = dataAccess.get name
+            let sessions = get dataAccess name
 
             return! ThothSerializer.RespondJsonSeq (eligibleSessions sessions diploma) Serialization.encode next ctx
         }
@@ -57,7 +57,7 @@ let getTotalEligibleMinutes (name: string, diploma: string) : HttpHandler =
     fun next ctx ->
         task {
             let dataAccess = ctx.GetService<ISessionDataAccess>()
-            let sessions = dataAccess.get name
+            let sessions = get dataAccess name
 
             return! ThothSerializer.RespondJson (totalMinutes (eligibleSessions sessions diploma)) encodeSessionMinutes next ctx
         }

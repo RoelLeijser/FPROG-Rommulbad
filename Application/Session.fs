@@ -8,6 +8,11 @@ type ISessionDataAccess =
     abstract member get: string -> List<Session>
     abstract member add: string -> Session -> Result<unit, string>
 
+let get (store: ISessionDataAccess) (name: string) =  
+    store.get name  
+
+let add (store: ISessionDataAccess) (name: string) (session: Session) =
+    store.add name session
 
 let sessionMinuteToInt (sessionMinute: SessionMinutes) = 
     match sessionMinute with

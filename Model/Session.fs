@@ -2,6 +2,8 @@ module Rommulbad.Model.Session
 
 open System
 open Common
+open Thoth.Json.Net
+
 
 /// Swimming session registered on a specific date
 ///
@@ -14,5 +16,8 @@ type Session =
       Minutes: SessionMinutes }
 
 
+module Session =
+  
+  let encodeSessionMinutes: Encoder<int> = fun minutes -> Encode.int minutes
 
   
