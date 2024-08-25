@@ -22,10 +22,10 @@ let encode: Encoder<Candidate> =
         Encode.object
             [ "name", Encode.string candidate.Name
               "guardian_id", encodeGuardianId candidate.GuardianId
-              "diploma", Diploma.encode candidate.Diploma ]
+              "diploma", Encode.option Diploma.encode candidate.Diploma ]
 
 let decode: Decoder<Candidate> =
     Decode.object (fun get ->
         { Name = get.Required.Field "name" Decode.string
           GuardianId = get.Required.Field "guardian_id" decodGuardianId
-          Diploma = get.Required.Field "diploma" Diploma.decode })
+          Diploma = None })

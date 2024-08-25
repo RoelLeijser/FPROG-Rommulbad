@@ -20,7 +20,9 @@ let sessionMinuteToInt (sessionMinute: SessionMinutes) =
 
 let eligibleSessions (sessions: List<Session>) (diploma: string) =
         let diploma = Diploma.make diploma
-
+        match diploma with
+        | None -> sessions
+        | Some diploma ->
         sessions
             |> List.filter (fun session -> session.Deep || Diploma.shallowOk diploma)
             |> List.filter (fun session -> session.Minutes >= SessionMinutes (Diploma.minMinutes diploma))
@@ -32,5 +34,6 @@ let isEligible (sessions: List<Session>) (diploma: string) =
     let eligibleSessions = eligibleSessions sessions diploma
     let total = totalMinutes eligibleSessions
     let diploma = Diploma.make diploma
-
-    total >= Diploma.totalMinutes diploma
+    match diploma with
+    | None -> true
+    | Some diploma -> total >= Diploma.totalMinutes diploma

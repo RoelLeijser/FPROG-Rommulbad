@@ -11,4 +11,4 @@ open Common
 type Candidate =
     { Name: string
       GuardianId: GuardianId
-      Diploma: Diploma }
+      Diploma: Option<Diploma> }

@@ -6,7 +6,7 @@ type ICandidateDataAccess =
     abstract all: unit -> List<Candidate>
     abstract get: string -> Candidate option
     abstract add: Candidate -> Result<unit, string>
-    abstract update: Candidate  -> unit
+    abstract update: Candidate  -> Result<unit, string>
 
 let all (store: ICandidateDataAccess) =
     store.all()
