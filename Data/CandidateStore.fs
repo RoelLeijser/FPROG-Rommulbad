@@ -13,17 +13,19 @@ type CandidateStore(store: Store) =
     interface ICandidateDataAccess with
         member this.all() : List<Candidate> =
             InMemoryDatabase.all store.candidates
-            |> Seq.map (fun (name, _, gId, dpl) ->
+            |> Seq.map (fun (name, dob, gId, dpl) ->
                 { Name = name
                   GuardianId = GuardianId gId
+                  DateOfBirth = dob
                   Diploma = Diploma.make dpl })
             |> List.ofSeq
 
         member this.get(name: string) : Candidate option =
             InMemoryDatabase.lookup name store.candidates
-            |> Option.map (fun (name, _, gId, dpl) ->
+            |> Option.map (fun (name, dob, gId, dpl) ->
                 { Name = name
                   GuardianId = GuardianId gId
+                  DateOfBirth = dob
                   Diploma = Diploma.make dpl })
 
         member this.add(candidate: Candidate) =

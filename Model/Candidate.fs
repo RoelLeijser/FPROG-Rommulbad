@@ -11,4 +11,5 @@ open Common
 type Candidate =
     { Name: string
       GuardianId: GuardianId
+      DateOfBirth: System.DateTime
       Diploma: Option<Diploma> }

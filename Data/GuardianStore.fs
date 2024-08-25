@@ -13,9 +13,10 @@ let guardianIdtoString (id: GuardianId) = id |> fun (GuardianId id) -> id
 let getAllCandidatesByGuardianId (guardianId: string) (store: Store) =
     InMemoryDatabase.all store.candidates
     |> Seq.filter (fun (_, _, gId, _) -> gId = guardianId)
-    |> Seq.map (fun (name, _, _, dpl) ->
+    |> Seq.map (fun (name, dob, _, dpl) ->
         { Name = name
           GuardianId = GuardianId guardianId
+          DateOfBirth = dob
           Diploma = Diploma.make dpl })
     |> List.ofSeq
 
