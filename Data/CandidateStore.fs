@@ -29,13 +29,13 @@ type CandidateStore(store: Store) =
                   Diploma = Diploma.make dpl })
 
         member this.add(candidate: Candidate) =
-            let result = InMemoryDatabase.insert candidate.Name (candidate.Name, System.DateTime.Now, guardianIdtoString candidate.GuardianId, "") store.candidates
+            let result = InMemoryDatabase.insert candidate.Name (candidate.Name, candidate.DateOfBirth, guardianIdtoString candidate.GuardianId, "") store.candidates
             match result with
             | Ok _ -> Ok ()
             | Error error -> Error (error.ToString ())
 
         member this.update (candidate: Candidate) = 
             match candidate.Diploma with
-            | Some diploma -> InMemoryDatabase.update candidate.Name (candidate.Name, System.DateTime.Now, guardianIdtoString candidate.GuardianId, diploma.ToString()) store.candidates
+            | Some diploma -> InMemoryDatabase.update candidate.Name (candidate.Name, candidate.DateOfBirth, guardianIdtoString candidate.GuardianId, diploma.ToString()) store.candidates
                             |> Ok 
             | None -> Error "Diploma is should be A, B or C"
